@@ -9,7 +9,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/tickets-restantes`)
+      .get(`https://rifas-api.vercel.app/tickets-restantes`)
       .then((response) => {
         setRifasAvailable(response.data.ticketsDisponiveis);
         console.log(response.data.ticketsDisponiveis); // Corrigido para exibir o valor atualizado
@@ -19,7 +19,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/time-left`)
+      .get(`https://rifas-api.vercel.app/time-left`)
       .then((response) => {
         setTimeLeft(response.data.timeLeft);
       })

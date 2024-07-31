@@ -14,9 +14,9 @@ const Form = () => {
     const fetchTickets = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/tickets-restantes`
+          `https://rifas-api.vercel.app/tickets-restantes`
         );
-        setRifasAvailable(response.data.ticketsDisponiveis); // Atualize o estado com o valor retornado pela API
+        setRifasAvailable(response.data.ticketsDisponiveis); 
         console.log(response.data);
       } catch (error) {
         console.error('Error fetching tickets', error);
@@ -29,7 +29,7 @@ const Form = () => {
   useEffect(() => {
     const fetchTimeLeft = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/time-left`);
+        const response = await axios.get(`https://rifas-api.vercel.app/time-left`);
         setTimeLeft(response.data.timeLeft);
       } catch (error) {
         console.error('Error fetching time left', error);
@@ -61,7 +61,7 @@ const Form = () => {
     if (rifasAvailable >= quantity) {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/generate-tickets`,
+          `https://rifas-api.vercel.app/generate-tickets`,
           { name, email, quantity }
         );
 
@@ -95,7 +95,7 @@ const Form = () => {
 
         try {
           const { data } = await axios.post(
-            `${import.meta.env.VITE_API_URL}/create-checkout`,
+            `https://rifas-api.vercel.app/Pcreate-checkout`,
             { products }
           );
 
