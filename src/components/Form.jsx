@@ -95,7 +95,7 @@ const Form = () => {
 
         try {
           const { data } = await axios.post(
-            `https://rifas-api.vercel.app/Pcreate-checkout`,
+            `https://rifas-api.vercel.app/create-checkout`,
             { products }
           );
 

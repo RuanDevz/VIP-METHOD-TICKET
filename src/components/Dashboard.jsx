@@ -12,7 +12,7 @@ export default function Dashboard() {
       .get(`https://rifas-api.vercel.app/tickets-restantes`)
       .then((response) => {
         setRifasAvailable(response.data.ticketsDisponiveis);
-        console.log(response.data.ticketsDisponiveis); // Corrigido para exibir o valor atualizado
+        console.log(response.data.ticketsDisponiveis);
       })
       .catch((error) => console.error('Error fetching tickets:', error));
   }, []);
