@@ -56,17 +56,14 @@ export default function Dashboard() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-[#333]">
       <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
-      <h1 className="text-3xl text-white font-bold pb-10 relative z-10">
-        BUY YOUR TICKET NOW!
-      </h1>
       <div className="bg-white bg-opacity-70 p-10 rounded-lg shadow-lg text-center relative z-10">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          AVAILABLE TICKETS
+          VIP TICKETS LEFT
         </h1>
-        <h2 className="text-2xl text-gray-700 mb-2">
+        <h2 className="text-lg text-gray-700 mb-2">
           {rifasAvailable} REMAINING VIP TICKETS
         </h2>
-        <h3 className="text-xl text-gray-600 mb-6">
+        <h3 className="text-lg text-gray-600 mb-6">
           TIME LEFT: {formatTime(timeLeft)}
         </h3>
         <Link to="/form">

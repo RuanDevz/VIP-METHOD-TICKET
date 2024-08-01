@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home"; // Ajuste o caminho conforme necessário
 import Dashboard from "./components/Dashboard"; // Exemplo de outro componente de página
 import Form from "./components/Form";

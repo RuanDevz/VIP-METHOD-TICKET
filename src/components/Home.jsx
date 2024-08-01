@@ -9,17 +9,15 @@ export default function Home() {
         <h1 className="text-3xl font-bold mb-4 text-center">
           VIP METHOD TICKET
         </h1>
-        <p className="mb-4 text-center">We are happy to have you here.</p>
         <a
           href="https://rentry.co/sevenx"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 underline"
         >
-          <h2 className="text-2xl font-semibold mb-2">VIP UPDATED LEAKS</h2>
+          <h2 className="text-2xl font-semibold mb-2 text-center">VIP UPDATED LEAKS</h2>
         </a>
         <p className="mb-4"></p>
-        <h2 className="text-2xl font-semibold mb-2">VIP DISCORD</h2>
         <div className="flex justify-center space-x-4 mb-4">
           <a
             href="https://discord.gg/95BKaYTPPS"

@@ -110,7 +110,7 @@ export default function SearchTicket() {
           </div>
         )}
         <div className="mt-4">
-          <button className="w-[100px] px-4 py-2 bg-black text-white font-bold rounded-md hover:bg-[#333]">Go Back</button>
+          <Link to='/'><button className="w-[100px] px-4 py-2 bg-black text-white font-bold rounded-md hover:bg-[#333]">Go Back</button></Link>
         </div>
       </div>
     </div>
