@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -8,29 +7,41 @@ export default function Dashboard() {
   const [rifasAvailable, setRifasAvailable] = useState(0);
 
   useEffect(() => {
-    axios
-      .get(`https://rifas-api.vercel.app/tickets-restantes`)
-      .then((response) => {
+    const fetchTickets = async () => {
+      try {
+        const response = await axios.get(`https://rifas-api.vercel.app/tickets-restantes`);
         setRifasAvailable(response.data.ticketsDisponiveis);
-        console.log(response.data.ticketsDisponiveis);
-      })
-      .catch((error) => console.error('Error fetching tickets:', error));
+      } catch (error) {
+        console.error('Error fetching tickets:', error);
+      }
+    };
+
+    const fetchTimeLeft = async () => {
+      try {
+        const response = await axios.get(`https://rifas-api.vercel.app/time-left`);
+        setTimeLeft(response.data.timeLeft);
+      } catch (error) {
+        console.error('Error fetching time left:', error);
+      }
+    };
+
+    fetchTickets();
+    fetchTimeLeft();
+
+    // Set an interval to fetch the time left periodically
+    const interval = setInterval(fetchTimeLeft, 1000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`https://rifas-api.vercel.app/time-left`)
-      .then((response) => {
-        setTimeLeft(response.data.timeLeft);
-      })
-      .catch((error) => console.error('Error fetching time left:', error));
-
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [timeLeft]);
 
   const formatTime = (seconds) => {
     const days = Math.floor(seconds / (3600 * 24));

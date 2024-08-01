@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -7,43 +7,48 @@ const Form = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [quantity, setQuantity] = useState(5);
-  const [rifasAvailable, setRifasAvailable] = useState(0); // Inicialize com 0
+  const [rifasAvailable, setRifasAvailable] = useState(0); 
   const [ticketGenerated, setTicketGenerated] = useState([]);
 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get(
-          `https://rifas-api.vercel.app/tickets-restantes`
-        );
-        setRifasAvailable(response.data.ticketsDisponiveis); 
-        console.log(response.data);
+        const response = await axios.get(`https://rifas-api.vercel.app/tickets-restantes`);
+        setRifasAvailable(response.data.ticketsDisponiveis);
       } catch (error) {
-        console.error('Error fetching tickets', error);
+        console.error('Error fetching tickets:', error);
       }
     };
 
-    fetchTickets();
-  }, []); // Remova 'setRifasAvailable' da lista de dependências
-
-  useEffect(() => {
     const fetchTimeLeft = async () => {
       try {
         const response = await axios.get(`https://rifas-api.vercel.app/time-left`);
         setTimeLeft(response.data.timeLeft);
       } catch (error) {
-        console.error('Error fetching time left', error);
+        console.error('Error fetching time left:', error);
       }
     };
 
+
+    fetchTickets();
     fetchTimeLeft();
 
+
+    const interval = setInterval(() => {
+      fetchTickets();
+      fetchTimeLeft();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [timeLeft]);
 
   const formatTime = (seconds) => {
     const days = Math.floor(seconds / (3600 * 24));
@@ -99,13 +104,13 @@ const Form = () => {
             { products }
           );
 
-          console.log(data)
+          console.log(data);
           window.location.href = data.url;
         } catch (error) {
-          console.error('Error creating checkout session', error);
+          console.error('Error creating checkout session:', error);
         }
       } catch (error) {
-        console.error('Error generating ticket', error);
+        console.error('Error generating ticket:', error);
       }
     } else {
       alert('Não há tickets suficientes disponíveis!');
