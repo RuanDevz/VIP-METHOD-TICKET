@@ -5,6 +5,7 @@ import axios from 'axios';
 export default function Dashboard() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [rifasAvailable, setRifasAvailable] = useState(0);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -25,13 +26,16 @@ export default function Dashboard() {
       }
     };
 
-    fetchTickets();
-    fetchTimeLeft();
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchTickets(), fetchTimeLeft()]);
+      setLoading(false);
+    };
 
-    // Set an interval to fetch the time left periodically
-    const interval = setInterval(fetchTimeLeft, 1000);
+    fetchData();
 
-    // Clear interval on component unmount
+    const interval = setInterval(fetchTimeLeft, 10000); // Adjusted interval to match fetchData frequency
+
     return () => clearInterval(interval);
   }, []);
 
@@ -57,15 +61,21 @@ export default function Dashboard() {
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-[#333]">
       <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
       <div className="bg-white bg-opacity-70 p-10 rounded-lg shadow-lg text-center relative z-10">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">
-          VIP TICKETS LEFT
-        </h1>
-        <h2 className="text-lg text-gray-700 mb-2">
-          {rifasAvailable} REMAINING VIP TICKETS
-        </h2>
-        <h3 className="text-lg text-gray-600 mb-6">
-          TIME LEFT: {formatTime(timeLeft)}
-        </h3>
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">VIP TICKETS LEFT</h1>
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <div className="loader my-10"></div>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-lg text-gray-700 mb-2">
+              {rifasAvailable} REMAINING VIP TICKETS
+            </h2>
+            <h3 className="text-lg text-gray-600 mb-6">
+              TIME LEFT: {formatTime(timeLeft)}
+            </h3>
+          </>
+        )}
         <Link to="/form">
           <button className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-md hover:bg-[#333] transition-colors duration-300">
             BUY VIP TICKET NOW

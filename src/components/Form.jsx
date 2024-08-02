@@ -7,8 +7,9 @@ const Form = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [quantity, setQuantity] = useState(5);
-  const [rifasAvailable, setRifasAvailable] = useState(0); 
+  const [rifasAvailable, setRifasAvailable] = useState(0);
   const [ticketGenerated, setTicketGenerated] = useState([]);
+  const [loading, setLoading] = useState(true); // New loading state
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -29,14 +30,16 @@ const Form = () => {
       }
     };
 
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchTickets(), fetchTimeLeft()]);
+      setLoading(false);
+    };
 
-    fetchTickets();
-    fetchTimeLeft();
-
+    fetchData();
 
     const interval = setInterval(() => {
-      fetchTickets();
-      fetchTimeLeft();
+      fetchData();
     }, 10000);
 
     return () => clearInterval(interval);
@@ -124,49 +127,57 @@ const Form = () => {
         <h1 className="text-3xl font-bold text-gray-800 mb-4">VIP METHOD TICKET</h1>
         <p className="text-xl text-gray-600 mb-6">PRICE: $1</p>
         <h2 className="text-2xl text-gray-700 mb-2 pb-3">
-          {rifasAvailable} REMAINING VIP TICKETS
+          {loading ? 'Loading...' : `${rifasAvailable} REMAINING VIP TICKETS`}
         </h2>
-        <p className="text-xl text-gray-600 mb-6">TIME LEFT: {formatTime(timeLeft)}</p>
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          <input
-            type="text"
-            placeholder="Your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="px-4 py-2 border rounded-md text-gray-800"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Your e-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="px-4 py-2 border rounded-md text-gray-800"
-            required
-          />
-          <input
-            type="number"
-            min={5}
-            max={rifasAvailable}
-            placeholder="Tickets quantity"
-            value={quantity}
-            onChange={(e) => {
-              const newValue = e.target.value.slice(0, 4); // Limita o número de caracteres
-              setQuantity(parseInt(newValue));
-            }}
-            className="px-4 py-2 border rounded-md text-gray-800"
-            required
-          />
-          <button
-            type="submit"
-            className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-md hover:bg-[#333] transition-colors duration-300"
-          >
-            BUY VIP TICKET NOW
-          </button>
-          <Link to="/consultticket">
-            <p className="text-black underline">CONSULT TICKET</p>
-          </Link>
-        </form>
+        <p className="text-xl text-gray-600 mb-6">
+          TIME LEFT: ${formatTime(timeLeft)}
+        </p>
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <div className="loader"></div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+            <input
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="px-4 py-2 border rounded-md text-gray-800"
+              required
+            />
+            <input
+              type="email"
+              placeholder="Your e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="px-4 py-2 border rounded-md text-gray-800"
+              required
+            />
+            <input
+              type="number"
+              min={5}
+              max={rifasAvailable}
+              placeholder="Tickets quantity"
+              value={quantity}
+              onChange={(e) => {
+                const newValue = e.target.value.slice(0, 4); // Limita o número de caracteres
+                setQuantity(parseInt(newValue));
+              }}
+              className="px-4 py-2 border rounded-md text-gray-800"
+              required
+            />
+            <button
+              type="submit"
+              className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-md hover:bg-[#333] transition-colors duration-300"
+            >
+              BUY VIP TICKET NOW
+            </button>
+            <Link to="/consultticket">
+              <p className="text-black underline">CONSULT TICKET</p>
+            </Link>
+          </form>
+        )}
       </div>
     </div>
   );
