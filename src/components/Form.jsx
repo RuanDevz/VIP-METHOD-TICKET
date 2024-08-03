@@ -1,75 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import ExpirationTimer from './ExpirationTimer'
 
 const Form = () => {
-  const [timeLeft, setTimeLeft] = useState(120 * 24 * 3600);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [quantity, setQuantity] = useState(5);
   const [rifasAvailable, setRifasAvailable] = useState(0);
   const [ticketGenerated, setTicketGenerated] = useState([]);
-  const [loading, setLoading] = useState(true); // New loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get(`https://rifas-api.vercel.app/tickets-restantes`);
+        const response = await axios.get('https://rifas-api.vercel.app/tickets-restantes');
         setRifasAvailable(response.data.ticketsDisponiveis);
       } catch (error) {
         console.error('Error fetching tickets:', error);
       }
     };
 
-    const fetchTimeLeft = async () => {
-      try {
-        const response = await axios.get(`https://rifas-api.vercel.app/time-left`);
-        setTimeLeft(response.data.timeLeft);
-      } catch (error) {
-        console.error('Error fetching time left:', error);
-      }
-    };
-
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([fetchTickets(), fetchTimeLeft()]);
+      await fetchTickets();
       setLoading(false);
     };
 
     fetchData();
-
-    const interval = setInterval(() => {
-      fetchData();
-    }, 10000);
-
-    return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-
-  const formatTime = (seconds) => {
-    const days = Math.floor(seconds / (3600 * 24));
-    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${days}d ${hours.toString().padStart(2, '0')}h ${minutes
-      .toString()
-      .padStart(2, '0')}m ${secs.toString().padStart(2, '0')}s`;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (rifasAvailable >= quantity) {
+    if (rifasAvailable >= quantity && quantity >= 5 && quantity <= 250) {
       try {
         const response = await axios.post(
-          `https://rifas-api.vercel.app/generate-tickets`,
+          'https://rifas-api.vercel.app/generate-tickets',
           { name, email, quantity }
         );
 
@@ -103,7 +70,7 @@ const Form = () => {
 
         try {
           const { data } = await axios.post(
-            `https://rifas-api.vercel.app/create-checkout`,
+            'https://rifas-api.vercel.app/create-checkout',
             { products }
           );
 
@@ -116,9 +83,11 @@ const Form = () => {
         console.error('Error generating ticket:', error);
       }
     } else {
-      alert('Não há tickets suficientes disponíveis!');
+      alert('A quantidade de ingressos deve estar entre 5 e 250, e não pode exceder o número disponível!');
     }
   };
+
+  const expirationDate = new Date('2024-12-01T23:59:59');
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-[#333]">
@@ -130,7 +99,7 @@ const Form = () => {
           {loading ? 'Loading...' : `${rifasAvailable} REMAINING VIP TICKETS`}
         </h2>
         <p className="text-xl text-gray-600 mb-6">
-          TIME LEFT: ${formatTime(timeLeft)}
+          <ExpirationTimer expirationDate={expirationDate} />
         </p>
         {loading ? (
           <div className="flex justify-center items-center">
@@ -154,19 +123,27 @@ const Form = () => {
               className="px-4 py-2 border rounded-md text-gray-800"
               required
             />
-            <input
-              type="number"
-              min={5}
-              max={rifasAvailable}
-              placeholder="Tickets quantity"
-              value={quantity}
-              onChange={(e) => {
-                const newValue = e.target.value.slice(0, 4); // Limita o número de caracteres
-                setQuantity(parseInt(newValue));
-              }}
-              className="px-4 py-2 border rounded-md text-gray-800"
-              required
-            />
+            <div className="flex flex-col">
+              <label className="text-gray-700 mb-2">
+                Tickets Quantity (5 to 250):
+                <input
+                  type="number"
+                  min={5}
+                  max={250}
+                  placeholder="Tickets quantity"
+                  value={quantity}
+                  onChange={(e) => {
+                    const newValue = Math.max(5, Math.min(250, parseInt(e.target.value) || 5));
+                    setQuantity(newValue);
+                  }}
+                  className="px-4 py-2 border rounded-md text-gray-800 mt-1"
+                  required
+                />
+              </label>
+              <p className="text-black text-sm mt-1">
+                Quantity must be between 5 and 250
+              </p>
+            </div>
             <button
               type="submit"
               className="px-8 py-4 bg-black text-white text-lg font-semibold rounded-md hover:bg-[#333] transition-colors duration-300"
