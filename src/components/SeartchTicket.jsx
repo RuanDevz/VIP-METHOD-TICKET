@@ -19,12 +19,12 @@ export default function SearchTicket() {
       let response;
       if (ticketNumber) {
         response = await axios.get(
-          `https://rifas-api.vercel.app/ticket-info/${ticketNumber}`
+          `${import.meta.env.VITE_API_URL}/ticket-info/${ticketNumber}`
         );
         setTicketInfo(response.data);
       } else if (email) {
         response = await axios.get(
-          `https://rifas-api.vercel.app/tickets-by-email/${email}`
+          `${import.meta.env.VITE_API_URL}/tickets-by-email/${email}`
         );
         setTicketInfo(response.data.tickets);
       }

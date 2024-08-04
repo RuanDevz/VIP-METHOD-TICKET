@@ -14,7 +14,7 @@ const Form = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get('https://rifas-api.vercel.app/tickets-restantes');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/tickets-restantes`);
         setRifasAvailable(response.data.ticketsDisponiveis);
       } catch (error) {
         console.error('Error fetching tickets:', error);
@@ -36,7 +36,7 @@ const Form = () => {
     if (rifasAvailable >= quantity && quantity >= 5 && quantity <= 250) {
       try {
         const response = await axios.post(
-          'https://rifas-api.vercel.app/generate-tickets',
+          `${import.meta.env.VITE_API_URL}/generate-tickets`,
           { name, email, quantity }
         );
 
@@ -70,7 +70,7 @@ const Form = () => {
 
         try {
           const { data } = await axios.post(
-            'https://rifas-api.vercel.app/create-checkout',
+            `${import.meta.env.VITE_API_URL}/create-checkout`,
             { products }
           );
 
@@ -131,7 +131,6 @@ const Form = () => {
                   min={5}
                   max={250}
                   placeholder="Tickets quantity"
-                  value={quantity}
                   onChange={(e) => {
                     const newValue = Math.max(5, Math.min(250, parseInt(e.target.value) || 5));
                     setQuantity(newValue);
@@ -140,9 +139,6 @@ const Form = () => {
                   required
                 />
               </label>
-              <p className="text-black text-sm mt-1">
-                Quantity must be between 5 and 250
-              </p>
             </div>
             <button
               type="submit"

@@ -20,7 +20,7 @@ export default function PaymentConfirmation() {
 
         if (userEmail && userName && quantity > 0) {
           const response = await axios.post(
-            `https://rifas-api.vercel.app/reduce-ticket`,
+            `${import.meta.env.VITE_API_URL}/reduce-ticket`,
             {
               name: userName,
               email: userEmail,

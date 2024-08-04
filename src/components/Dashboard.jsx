@@ -13,18 +13,19 @@ export default function Dashboard() {
     const fetchTickets = async () => {
       try {
         const response = await axios.get(
-          "https://rifas-api.vercel.app/tickets-restantes"
+          `${import.meta.env.VITE_API_URL}/tickets-restantes`
         );
         setRifasAvailable(response.data.ticketsDisponiveis);
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false)
       } catch (error) {
         console.error("Error fetching tickets:", error);
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false)
       }
     };
 
+
     fetchTickets();
-  }, []); // Add an empty dependency array to run once
+  }, [])
 
   const expirationDate = new Date('2024-12-01T23:59:59');
 
