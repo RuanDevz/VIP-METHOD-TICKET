@@ -13,7 +13,7 @@ export default function Dashboard() {
     const fetchTickets = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/tickets-restantes`
+          `https://rifas-api.vercel.app/tickets-restantes`
         );
         setRifasAvailable(response.data.ticketsDisponiveis);
         setLoading(false)
@@ -32,7 +32,7 @@ export default function Dashboard() {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-[#333]">
       <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
-      <div className="bg-white bg-opacity-70 p-10 rounded-lg shadow-lg text-center relative z-10">
+      <div className="bg-white  p-10 rounded-lg shadow-lg text-center relative z-10">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">
           VIP TICKETS LEFT
         </h1>

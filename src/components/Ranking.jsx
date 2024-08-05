@@ -12,7 +12,7 @@ const Ranking = () => {
     const fetchTopBuyers = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/top-buyers`
+          `https://rifas-api.vercel.app/top-buyers`
         );
         setTopBuyers(response.data.topBuyers);
       } catch (error) {
@@ -30,9 +30,9 @@ const Ranking = () => {
       case 0:
         return Gold;
       case 1:
-        return Prata;
-      case 2:
         return Bronze;
+      case 2:
+        return Prata;
       default:
         return null;
     }
@@ -49,6 +49,19 @@ const Ranking = () => {
     return email.split("@")[0];
   };
 
+  const getBackgroundColorForIndex = (index) => {
+    switch (index) {
+      case 0:
+        return "#ECC435";
+      case 1:
+        return "#cfcfcf";
+      case 2:
+        return "#dd8b33";
+      default:
+        return "#7c7c8a";
+    }
+  };
+
   return (
     <div>
       {loading ? (
@@ -60,22 +73,33 @@ const Ranking = () => {
       ) : (
         <ul className="text-lg text-gray-700">
           {topBuyers.map((buyer, index) => (
-            <li key={index} className="mb-2 flex items-center">
-              {index < 3 ? (
-                <img
-                  src={getImageForIndex(index)}
-                  alt={`Rank ${index + 1}`}
-                  className="w-6 h-6 mr-2"
-                />
-              ) : (
-                <span className="w-6 h-6 mr-2 flex items-center justify-center font-semibold">
-                  {getLabelForIndex(index)}
+            <li
+              key={index}
+              className="mb-2 p-4 border rounded-lg flex items-center justify-between"
+              style={{
+                backgroundColor: getBackgroundColorForIndex(index),
+                borderColor: getBackgroundColorForIndex(index),
+              }}
+            >
+              <div className="flex items-center">
+                {index < 3 ? (
+                  <img
+                    src={getImageForIndex(index)}
+                    alt={`Rank ${index + 1}`}
+                    className="w-6 h-6 mr-2"
+                  />
+                ) : (
+                  <span className="w-6 h-6 mr-2 flex items-center justify-center font-semibold">
+                    {getLabelForIndex(index)}
+                  </span>
+                )}
+                <span className="font-semibold text-white">
+                  {getEmailWithoutDomain(buyer.email)}
                 </span>
-              )}
-              <span className="font-semibold my-2">
-                {getEmailWithoutDomain(buyer.email)}
-              </span>
-              : {buyer.totalTickets} Tickets
+              </div>
+              <p className="text-white font-semibold">
+                {buyer.totalTickets} Tickets
+              </p>
             </li>
           ))}
         </ul>

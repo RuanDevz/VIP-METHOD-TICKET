@@ -19,12 +19,12 @@ export default function SearchTicket() {
       let response;
       if (ticketNumber) {
         response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/ticket-info/${ticketNumber}`
+          `https://rifas-api.vercel.app/ticket-info/${ticketNumber}`
         );
         setTicketInfo(response.data);
       } else if (email) {
         response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/tickets-by-email/${email}`
+          `https://rifas-api.vercel.app/tickets-by-email/${email}`
         );
         setTicketInfo(response.data.tickets);
       }
@@ -39,7 +39,7 @@ export default function SearchTicket() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#333] p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#191919] p-4">
       <div className="bg-gray-100 p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-2xl font-bold mb-4 text-center">Ticket System</h1>
         <div className="mb-4">

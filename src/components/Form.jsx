@@ -14,7 +14,7 @@ const Form = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/tickets-restantes`);
+        const response = await axios.get(`https://rifas-api.vercel.app/tickets-restantes`);
         setRifasAvailable(response.data.ticketsDisponiveis);
       } catch (error) {
         console.error('Error fetching tickets:', error);
@@ -36,7 +36,7 @@ const Form = () => {
     if (rifasAvailable >= quantity && quantity >= 5 && quantity <= 250) {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/generate-tickets`,
+          `https://rifas-api.vercel.app/generate-tickets`,
           { name, email, quantity }
         );
 
@@ -70,7 +70,7 @@ const Form = () => {
 
         try {
           const { data } = await axios.post(
-            `${import.meta.env.VITE_API_URL}/create-checkout`,
+            `https://rifas-api.vercel.app/create-checkout`,
             { products }
           );
 
@@ -87,12 +87,18 @@ const Form = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const value = parseInt(e.target.value);
+    const newValue = isNaN(value) ? 5 : Math.max(5, Math.min(250, value));
+    setQuantity(newValue);
+  };
+
   const expirationDate = new Date('2024-12-01T23:59:59');
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-[#333]">
       <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
-      <div className="bg-white bg-opacity-70 p-10 rounded-lg shadow-lg text-center relative z-10 max-w-md w-full">
+      <div className="bg-white  p-10 rounded-lg shadow-lg text-center relative z-10 max-w-md w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">VIP METHOD TICKET</h1>
         <p className="text-xl text-gray-600 mb-6">PRICE: $1</p>
         <h2 className="text-2xl text-gray-700 mb-2 pb-3">
@@ -130,11 +136,8 @@ const Form = () => {
                   type="number"
                   min={5}
                   max={250}
-                  placeholder="Tickets quantity"
-                  onChange={(e) => {
-                    const newValue = Math.max(5, Math.min(250, parseInt(e.target.value) || 5));
-                    setQuantity(newValue);
-                  }}
+                  placeholder="Tickets"
+                  onChange={handleChange}
                   className="px-4 py-2 border rounded-md text-gray-800 mt-1"
                   required
                 />
