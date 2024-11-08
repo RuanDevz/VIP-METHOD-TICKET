@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import ExpirationTimer from './ExpirationTimer'
+import ExpirationTimer from './ExpirationTimer';
 
 const Form = () => {
   const [name, setName] = useState('');
@@ -10,6 +10,10 @@ const Form = () => {
   const [rifasAvailable, setRifasAvailable] = useState(0);
   const [ticketGenerated, setTicketGenerated] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Preço original e preço com desconto
+  const originalPrice = 1;
+  const discountedPrice = (originalPrice * 0.7).toFixed(2); 
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -63,7 +67,7 @@ const Form = () => {
         const products = [
           {
             name: 'VIP Method Ticket',
-            price: 1,
+            price: discountedPrice, // Usar o preço com desconto
             quantity,
           },
         ];
@@ -98,15 +102,23 @@ const Form = () => {
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden bg-[#333]">
       <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
-      <div className="bg-white  p-10 rounded-lg shadow-lg text-center relative z-10 max-w-md w-full">
+      <div className="bg-white p-10 rounded-lg shadow-lg text-center relative z-10 max-w-md w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">VIP METHOD TICKET</h1>
-        <p className="text-xl text-gray-600 mb-6">PRICE: $1</p>
+        
+        {/* Exibição do preço original e com desconto */}
+        <div className="mb-6">
+          <p className="text-xl text-gray-600 line-through">${originalPrice}</p>
+          <p className="text-2xl text-red-600 font-bold">${discountedPrice} - 30% OFF</p>
+        </div>
+
         <h2 className="text-2xl text-gray-700 mb-2 pb-3">
           {loading ? 'Loading...' : `${rifasAvailable} REMAINING VIP TICKETS`}
         </h2>
+
         <p className="text-xl text-gray-600 mb-6">
           <ExpirationTimer expirationDate={expirationDate} />
         </p>
+
         {loading ? (
           <div className="flex justify-center items-center">
             <div className="loader"></div>
